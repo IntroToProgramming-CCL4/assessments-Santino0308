@@ -1,0 +1,12 @@
+#Enhanced and revised 
+name = input("Enter your first name: ") #Ask the user for an input 
+name2 = input("Enter your second name: ")
+hometown = input("Enter your hometown: ")
+age = input("Enter your age: ")
+# Store information in a dictionary
+person_info = {
+        "name": name,
+        "second name": name2,
+        "hometown": hometown,
+        "age": age}
+print(f"Hello {person_info['name']} {person_info['second name']}\nI see your live in {person_info['hometown']}\nAnd you are {person_info['age']}\nNice to meet you") #Print Code 
