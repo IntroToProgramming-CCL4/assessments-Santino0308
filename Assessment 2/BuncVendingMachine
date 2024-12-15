@@ -1,0 +1,260 @@
+import random
+snack = {                                                     #The dictionary where the snacks is stored, and each item is assigned with a code to access each item with ease.
+    1: {"name": "Lays", "price": 7.50, "Stock": 3},          
+    2: {"name": "Doritos", "price": 7.75, "Stock": 5},
+    3: {"name": "Cheetos", "price": 7.25, "Stock": 2},
+    4: {"name": "Oreo", "price": 4.00, "Stock": 9},
+    5: {"name": "Kitkat", "price": 6.00, "Stock": 10},
+    6: {"name": "V-8 Engine", "price": 3000.50, "Stock": 7},
+}
+drink = {                                                     #The dictionary where the drinks is stored, and each item is assigned with a code to access each item with ease.
+    7: {"name": "Mai-Dubai", "price": 4, "Stock": 1},
+    8: {"name": "Alain", "price": 5, "Stock": 9},
+    9: {"name": "Milk", "price": 6, "Stock": 2},
+    10: {"name": "Coke", "price": 8.5, "Stock": 23},
+    11: {"name": "Pepsi", "price": 8.5, "Stock": 7},
+    12: {"name": "Motor oil", "price": 30.80, "Stock": 4},
+}
+
+def display_items(): #This is the first def function which will print out the snack, and drink menu.
+    print("Welcome to Buncs Vending Machine!")
+    print("Here are the available items:\n")
+
+    print("Snacks")
+    print(f"{'Code':<5} {'Name':<20} {'Price':>10} {'Stock':>6}") #Alligns the the text displayed in an organized way for readability and clarity.
+    print("-" * 45) #It print outs 45 "-" for aesthetic purposes;).
+    for code, item in snack.items():
+        print(f"{code:<5} {item['name']:<20} AED{item['price']:>8.2f} {item['Stock']:>6}") #Alligns the the text displayed in an organized way for readability and clarity.
+    
+    print("\nDrinks")
+    print(f"{'Code':<5} {'Name':<20} {'Price':>10} {'Stock':>6}") #Alligns the the text displayed in an organized way for readability and clarity.
+    print("-" * 45) #It print outs 45 "-" for aesthetic purposes;).
+    for code, item in drink.items():
+        print(f"{code:<5} {item['name']:<20} AED{item['price']:>8.2f} {item['Stock']:>6}") #Alligns the the text displayed in an organized way for readability and clarity.
+
+
+cart = [] #The snack and drink choices will be stored in this cart, in order to puchase multiple items at once, adding this gives efficiency for the costumer.
+
+
+def select_items(snack, drink): #The second def function that will execute the selection of the items, and adding it to the cart.
+    while True: #This code will be on loop until the costumer decides to proceed with the next def function or to stop the code.
+        try:
+            print("")
+            choice = input("Enter the number you want to add to the cart, or enter 0 to finish, or '*' to exit: ") #Asks the user for an input to choose wich item they want to buy.
+            if choice == "0": #If they input 0 the def function will end and proceeds to the next def function. 
+                break
+            elif choice == "*": #If they input "*" this will stop the code from running.
+                print("Okay, thank you for trying!")
+                return []
+    
+            choice = int(choice)
+            if choice in snack: #This is where the selection and adding it to the cart list will start
+                if snack[choice]['Stock'] > 0: #This code checks the stock of that chosen item if it is available or not.
+                    cart.append(snack[choice]) #If the chosen item is in stock, it will store it in the cart containing the name and the price of that said item.
+                    snack[choice]['Stock'] -= 1 #This will deduct 1 from the stock of that chosen item.
+                    print("\nSnack added to your cart.") #Displays a text that indicates that the added item is in the cart and will loop back again to select another item.
+                    #This lines of code will execute a recomendation for each item that is being chosen.
+                    if choice == 6: 
+                        print("Are you seriously gonna buy an engine??? Buy motor oil also to match it.")
+                    if choice in [1, 2, 3]:
+                        print("You should pair that together with Coke or Pepsi!")
+                    if choice in [4, 5]:
+                        print("You should pair that together with Milk or water to be more healthy!")
+                else:
+                    print(f"\nSorry, {snack[choice]['name']} is out of stock.") #If the stock is 0 this will display a text that says the item is unavailable and will loop back at the selection again.
+    
+            elif choice in drink:
+                if drink[choice]['Stock'] > 0:
+                    cart.append(drink[choice])
+                    drink[choice]['Stock'] -= 1
+                    print("\nDrink added to your cart.")
+                    if choice == 12:
+                        print("Woah, are you really gonna drink motor oil????? Buy an engine also to match it.")
+                    if choice in [7, 8]:
+                        print("Good choice! Drinking water is healthy, don't buy anything else.")
+                    if choice == 9:
+                        print("You should pair that with Oreo or Kitkat!")
+                    if choice in [10, 11]:
+                        print("That would pair nicely with Cheetos, Doritos, or even Lays.")
+                else:
+                    print(f"\nSorry, {drink[choice]['name']} is out of stock.")
+            else:
+                print("Please enter a valid number, numbnuts!!") #Error handling to ensure the costumer will enter a valid number.
+    
+        except ValueError:
+            print("Invalid input. Please enter a valid number.") #This futher ensures that the input is only a number.
+    return see_cart()
+
+def see_cart(): #This is the third def function that will review the content of your cart and presents option for flexibilty and costumizability.
+    print("\nThis is your current cart contents.") #It first displays this text that reviews the content of your cart.
+    
+    #If the cart has no content it will display this text and then returns the costumer to the selection of items page.
+    if not cart:
+        print("Your cart is empty, smarty! Go and buy something.")
+        return select_items(snack, drink)
+    
+    #And if the cart has contents inside it will display the whole content of the cart, which is the name of the item as well as its price.
+    for i, item in enumerate(cart, start=1):
+        print(f"{i}. {item['name']} - AED{item['price']:.2f}")
+    
+    #Below are the options that offers flexibility to the costumer if they want to change something about their purchase.
+    print("\nOptions:")
+    print("1. Remove an item")
+    print("2. Confirm and finish")
+    print("3. Cancel selected items and shop again")
+    print("4. Go back")
+    print("5. Cancel purchase and exit")
+
+    try:
+        #This asks the user what option they would like to do with the current state of their purchase.
+        print("")
+        choice = int(input("Please select what you want to do next: "))
+
+        #This first option "Remove an item" allows the user to remove an item in the cart.
+        if choice == 1:
+            remove = int(input("Please enter the number of the item you want to remove: "))#It asks the user which item they want to remove from their cart.
+            if 1 <= remove <= len(cart):#This line checks if the value of remove is within the valid range of the cart list. This ensures the item to remove is within the bounds of the cart.
+                removed_item = cart.pop(remove - 1)#This removes the item from the cart list at the position remove - 1 (since list indices are 0-based) and stores it in removed_item.
+                print("")
+                print(f"{removed_item['name']} has been removed from your cart.")#It prints out this message indicating that the item has been removed.
+                
+                #If removed_item is found in the values of the snack dictionary, it finds the corresponding key and increments the stock of that snack by 1.
+                if removed_item in snack.values():
+                    snack_key = list(snack.keys())[list(snack.values()).index(removed_item)]
+                    snack[snack_key]['Stock'] += 1
+                
+                #If removed_item is found in the values of the drink dictionary, it finds the corresponding key and increments the stock of that drink by 1.
+                elif removed_item in drink.values():
+                    drink_key = list(drink.keys())[list(drink.values()).index(removed_item)]
+                    drink[drink_key]['Stock'] += 1
+                
+                return see_cart()
+                #This presumably calls a function to display the current cart and returns the user to the options menu.
+            
+            #This will ensure that the input number is within the content of the cart. 
+            else:
+                print("Invalid number. Please select a valid item to remove.")
+                return see_cart()
+        
+        #This code will let the user proceed to the next step.
+        elif choice == 2:
+            print("")
+            print("Thank you for confirming your cart. Please proceed to payment!")
+            return cart
+        
+        #This code will clear the contents of the cart and let the user choose other items again.
+        elif choice == 3:
+            print("")
+            print("Okay, your cart has been cleared. Shop again.")
+            cart.clear()
+            return display_items(), select_items(snack, drink)
+        
+        #This will just return the user to the menu selection once again and will not clear the contents of the cart.
+        elif choice == 4:
+            print("")
+            print("Okay, please choose more items to add to your cart!")
+            print("")
+            return display_items(), select_items(snack, drink)
+       
+        #lastly, this option will let the user exit the code and cancel the proccess.        
+        elif choice == 5:
+            print("")
+            print("Okay, thank you for your time!")
+            return []
+        
+        #This ensures that the input option is within the choices.
+        else:
+            print("")
+            print("Invalid option. Please try again.")
+            return see_cart()
+    
+    #This ensures that the input is only a number.
+    except ValueError:
+        print("")
+        print("Please enter a valid number.")
+        return see_cart()
+
+#This is a mini game def function that will function when a condition is met.
+def double_or_nothing(cart, cost):
+    print("\nYou've unlocked the mini-game: Double or Nothing!") #It will first print out this display text that indicates you are eligible for the mini game.
+    print("Guess a number between 1 and 3. If you guess correctly, your purchased items are doubled!")
+    print("If you lose, you get nothing, but your payment will be kept for the original order.")
+    print("This game is optional. You can choose to play or skip.\n")
+    
+    while True:
+        choice = int(input("Do you want to play? (1 for yes/0 for no): "))#It firsts ask the user to input a choice, wether they want to play or not.
+        #If the choice is yes, it will run these line of code
+        if choice == 1:
+            try:
+                guess = int(input("Enter your guess (1-3): ")) #First it asks the user for an answer.
+                if guess < 1 or guess > 3: #This ensures that the guess number is in range of the number between 1-3.
+                    print("Please guess a number between 1 and 3.")
+                    continue
+
+                generated_number = random.randint(1, 3) #This is where the random generated number is stored.
+                print(f"The generated number is: {generated_number}") #This will print out the random generated number.
+
+                if guess == generated_number: #If the guess and the random generated number matches. it will display this text and double the purchased items.
+                    print("\nCongratulations! You guessed correctly!")
+                    print("Your purchased items are doubled!")
+                    return True 
+                else: #If the guess and random generated number doesnt match, then this text will be displayed.
+                    print("\nSorry, you guessed wrong. You get nothing.")
+                    return False
+            except ValueError:
+                print("Please enter a valid number.")
+        #If the answer is no, it will let the costumer get their items.
+        elif choice == 0:
+            print("\nAlright, skipping the mini-game. Enjoy your purchase!")
+            return None
+        #Ensures that the costumer will input a valid response.
+        else:
+            print("Please answer with '1' for yes or '0' for no.")
+
+def purchase(cart): #This is the fourth and last def function, that handles the purchase of the items.
+    cost = sum(item['price'] for item in cart) #This line uses a generator expression to iterate over each item in the cart list and sums up the 'price' of each item, storing the result in the variable cost.
+    print("\nYour items:")
+    for item in cart:
+        print(f"- {item['name']} - AED{item['price']:.2f}") #This loop goes through each item in the cart list and prints the name and price of each item in a formatted string. The price is formatted to two decimal places.
+    print(f"\nTotal cost: AED{cost:.2f}") #Finally, this prints the total cost of all items in the cart, again formatted to two decimal places, with a newline character at the beginning to ensure it appears on a new line.
+
+    while True:
+        try:
+            money = float(input("Enter the amount of money to pay. Input 1 to cancel purchase: ")) #The user is prompted to enter the amount of money to pay. If they enter 1, the purchase is canceled, and a message is printed.
+            if money == 1:
+                print("")
+                print("Purchase has been canceled, thank you for shopping.")
+                return[]
+            elif money >= cost: #If the user enters an amount greater than or equal to the total cost, the change is calculated and printed.
+                change = money - cost
+                print("")
+                print(f"\nPayment successful! Your change is AED{change:.2f}.")
+           
+                
+                if cost >= 15: #If the total cost is 15 or more, the double_or_nothing mini-game is triggered. The result of the game determines additional actions:
+                    game_result = double_or_nothing(cart, cost)
+                    if game_result is True: #If the game is won, the user's items are doubled.
+                        print("\nYour items have been doubled! Enjoy!")
+                    elif game_result is False: #If lost, the payment is kept for the original order.
+                        print("\nYou lost the game. Payment has been kept for the original order.")
+                    else: #If the game is skipped, a message is printed.
+                        print("\nSkipping the mini-game. Enjoy your purchase!")
+                else:
+                    print("\nThank you for your purchase! Enjoy your items!")
+                
+                cart.clear() #The cart is cleared, and the loop breaks, ending the transaction.
+                break
+            else: #If the user enters an amount less than the total cost, a message is printed showing the additional amount needed.
+                print(f"Insufficient funds. You need AED{cost - money:.2f} more.")
+        except ValueError: #If the user enters an invalid amount (non-numeric input), an error message is printed.
+            print("Invalid input. Please enter a valid amount.")
+
+def vending_machine_buncs():
+    display_items()
+    selected_cart = select_items(snack, drink)
+    if selected_cart:
+        purchase(selected_cart)
+        print("")
+
+#This starts the entire vending machine.
+vending_machine_buncs()
